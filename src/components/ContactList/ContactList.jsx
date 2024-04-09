@@ -1,12 +1,11 @@
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import Contact from '../Contact';
-import { deleteContact, selectContacts } from '../../redux/contactsSlice';
+import { selectContacts } from '../../redux/contactsSlice';
 import { selectNameFilter } from '../../redux/filtersSlice.js';
 
 export default function ContactList() {
   const filter = useSelector(selectNameFilter);
   const contacts = useSelector(selectContacts);
-  const dispatch = useDispatch();
 
   const getVisibleContacts = () => {
     const normalizedFilter = filter.toLowerCase();
@@ -24,8 +23,7 @@ export default function ContactList() {
     }) => <li key={id}>
       <Contact id={id}
                fullName={name}
-               number={number}
-               onDelete={() => dispatch(deleteContact(id))} />
+               number={number} />
     </li>)}
   </ul>);
 }
