@@ -16,6 +16,7 @@ export const ContactFormStyled = styled.form`
 `;
 
 export const Input = styled.input`
+  width: 240px;
   padding: 5px;
 
   font-size: 14px;
