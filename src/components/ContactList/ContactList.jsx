@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux';
-import ContactItem from '../ContactItem';
+import Contact from '../Contact';
 import { deleteContact, selectContacts } from '../../redux/contactsSlice';
 import { selectNameFilter } from '../../redux/filtersSlice.js';
 
@@ -22,10 +22,10 @@ export default function ContactList() {
       name,
       number,
     }) => <li key={id}>
-      <ContactItem id={id}
-                   fullName={name}
-                   number={number}
-                   onDelete={() => dispatch(deleteContact(id))} />
+      <Contact id={id}
+               fullName={name}
+               number={number}
+               onDelete={() => dispatch(deleteContact(id))} />
     </li>)}
   </ul>);
 }

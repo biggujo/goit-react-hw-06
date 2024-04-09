@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
-import { Button } from './ContactItem.styled';
+import { Button } from './Contact.styled';
 
-export default function ContactItem({
+export default function Contact({
   id,
   fullName,
   number,
@@ -15,7 +15,7 @@ export default function ContactItem({
   </div>);
 }
 
-ContactItem.propTypes = {
+Contact.propTypes = {
   id: PropTypes.string.isRequired,
   fullName: PropTypes.string.isRequired,
   number: PropTypes.string.isRequired,
