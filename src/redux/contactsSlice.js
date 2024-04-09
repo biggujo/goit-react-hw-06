@@ -3,56 +3,58 @@ import { persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import { nanoid } from 'nanoid';
 
-const initialContactsState = {
-  list: [
+export const selectContacts = (state) => state.contacts.items;
+
+const initialState = {
+  items: [
     {
       id: 'id-1',
       name: 'Rosie Simpson',
-      phone: '459-12-56',
+      number: '459-12-56',
     },
     {
       id: 'id-2',
       name: 'Hermione Kline',
-      phone: '443-89-12',
+      number: '443-89-12',
     },
     {
       id: 'id-3',
       name: 'Eden Clements',
-      phone: '645-17-79',
+      number: '645-17-79',
     },
     {
       id: 'id-4',
       name: 'Annie Copeland',
-      phone: '227-91-26',
+      number: '227-91-26',
     },
   ],
 };
 
 const slice = createSlice({
   name: 'contacts',
-  initialState: initialContactsState,
+  initialState,
   reducers: {
     addContact: {
       reducer: (state, action) => {
-        state.list.unshift(action.payload.newContact);
+        state.items.unshift(action.payload.newContact);
       },
       prepare: ({
         name = 'John Smith',
-        phone = '555-SMITH',
+        number = '555-SMITH',
       }) => ({
         payload: {
           newContact: {
             id: nanoid(),
             name,
-            phone,
+            number,
           },
         },
       }),
     },
-    deleteContactById: {
+    deleteContact: {
       reducer: (state, action) => {
-        const idx = state.list.findIndex(({ id }) => id === action.payload.id);
-        state.list.splice(idx, 1);
+        const idx = state.items.findIndex(({ id }) => id === action.payload.id);
+        state.items.splice(idx, 1);
       },
       prepare: (id) => ({
         payload: {
@@ -70,6 +72,6 @@ const persistConfig = {
 
 export const {
   addContact,
-  deleteContactById,
+  deleteContact,
 } = slice.actions;
 export const contactsReducer = persistReducer(persistConfig, slice.reducer);

@@ -1,69 +1,60 @@
-import React, { useRef, useState } from 'react';
-import { nanoid } from 'nanoid';
+import { useDispatch } from 'react-redux';
+import { ErrorMessage, FormikProvider, useFormik } from 'formik';
+import * as Yup from 'yup';
 import PropTypes from 'prop-types';
-import { Button, ContactFormStyled, Input, Label } from './ContactForm.styled';
+import {
+  Button, ContactFormStyled, ErrorMessageStyled, Input, Label,
+} from './ContactForm.styled';
+import { addContact } from '../../redux/contactsSlice.js';
 
-export default function ContactForm({ onSubmit }) {
-  const [name, setName] = useState('');
-  const [phone, setPhone] = useState('');
+const validationSchema = Yup.object().shape({
+  name: Yup.string().min(3).max(50).required(),
+  number: Yup.string().min(3).max(50).required(),
+});
 
-  const nameInputId = useRef(nanoid());
-  const phoneInputId = useRef(nanoid());
+const initialValues = {
+  name: '',
+  number: '',
+};
 
-  const handleInputChange = ({
-                               currentTarget: {
-                                 value,
-                                 name,
-                               },
-                             }) => {
-    switch (name) {
-      case 'name':
-        setName(value);
-        return;
+export default function ContactForm() {
+  const dispatch = useDispatch();
+  const formik = useFormik({
+    initialValues,
+    validationSchema,
+    onSubmit: (values, { resetForm }) => {
+      dispatch(addContact(values));
+      resetForm();
+    },
+  });
 
-      case 'phone':
-        setPhone(value);
-        return;
+  return <FormikProvider value={formik}>
+    <ContactFormStyled onSubmit={formik.handleSubmit}>
+      <div>
+        <Label>
+          Name
+          <Input type='text'
+                 name='name'
+                 value={formik.values.name}
+                 onChange={formik.handleChange} />
+        </Label>
+        <ErrorMessage name='name' component={ErrorMessageStyled} />
+      </div>
 
-      default:
-        return;
-    }
-  };
+      <div>
+        <Label>
+          Phone
+          <Input type='tel'
+                 name='number'
+                 value={formik.values.number}
+                 onChange={formik.handleChange} />
+        </Label>
+        <ErrorMessage name='number' component={ErrorMessageStyled} />
+      </div>
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-
-    const isSubmitSuccessful = onSubmit(Object.fromEntries(new FormData(event.target).entries()));
-
-    if (isSubmitSuccessful) {
-      resetFormInfo();
-    }
-  };
-
-  const resetFormInfo = () => {
-    setName('');
-    setPhone('');
-  };
-
-  return <ContactFormStyled onSubmit={handleSubmit}>
-    <Label htmlFor={nameInputId.current}>Name</Label>
-    <Input type='text'
-           id={nameInputId.current}
-           name='name'
-           value={name}
-           onChange={handleInputChange}
-           required />
-
-    <Label htmlFor={phoneInputId.current}>Phone</Label>
-    <Input type='tel'
-           id={phoneInputId.current}
-           name='phone'
-           value={phone}
-           onChange={handleInputChange}
-           title='Phone number must be digits and can contain spaces, dashes, parentheses and can start with +'
-           required />
-    <Button type='submit'>Add contact</Button>
-  </ContactFormStyled>;
+      <Button type='submit'>Add contact</Button>
+    </ContactFormStyled>
+  </FormikProvider>;
 }
 ContactForm.propTypes = {
   onSubmit: PropTypes.func.isRequired,

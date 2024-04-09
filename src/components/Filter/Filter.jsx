@@ -1,9 +1,8 @@
-import React from 'react';
 import { useDispatch } from 'react-redux';
 import { nanoid } from 'nanoid';
 import PropTypes from 'prop-types';
 import { Input, Label, Wrapper } from './Filter.styled';
-import { setFilter } from '../../redux/filter/filterSlice';
+import { changeFilter } from '../../redux/filtersSlice.js';
 
 export default function Filter({
   label,
@@ -20,7 +19,7 @@ export default function Filter({
            name='filter'
            value={value}
            disabled={isDisabled}
-           onChange={(event) => dispatch(setFilter(event.target.value))} />
+           onChange={(event) => dispatch(changeFilter(event.target.value))} />
   </Wrapper>);
 }
 

@@ -1,23 +1,21 @@
-import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import toast, { Toaster } from 'react-hot-toast';
 import { Wrapper } from './App.styled';
 import Section from '../Section';
 import ContactForm from '../ContactForm';
-import Filter from '../Filter';
+import SearchBox from '../Filter';
 import ContactList from '../ContactList';
 import GlobalStyles from '../GlobalStyles';
-import { getContacts } from '../../redux/contacts/selectors';
 import {
-  addContact,
-} from '../../redux/contacts/contactsSlice';
-import { getFilter } from '../../redux/filter/selectors';
+  selectContacts, addContact,
+} from '../../redux/contactsSlice';
+import { selectNameFilter } from '../../redux/filtersSlice.js';
 
 export default function App() {
-  const filter = useSelector(getFilter);
-  const contacts = useSelector(getContacts);
+  const filter = useSelector(selectNameFilter);
+  const contacts = useSelector(selectContacts);
   const dispatch = useDispatch();
-  
+
   // Return true if success, otherwise return false
   const handleSubmit = (contact) => {
     return pushContact(contact);
@@ -36,7 +34,7 @@ export default function App() {
    */
   const pushContact = ({
     name,
-    phone,
+    number,
   }) => {
     if (!isNameValid()) {
       return false;
@@ -49,7 +47,7 @@ export default function App() {
     // Add a non-empty unique contact
     dispatch(addContact({
       name,
-      phone,
+      number,
     }));
 
     return true;
@@ -69,14 +67,14 @@ export default function App() {
     }
 
     function isPhoneValid() {
-      if (!phone) {
-        toast.error('Provide a phone');
+      if (!number) {
+        toast.error('Provide a number');
         return false;
       }
 
       const regExp = new RegExp('^[0-9 -\'+]+$');
 
-      const isPhoneAValidNumber = regExp.test(phone);
+      const isPhoneAValidNumber = regExp.test(number);
 
       if (!isPhoneAValidNumber) {
         toast.error(
@@ -95,9 +93,9 @@ export default function App() {
           onSubmit={handleSubmit} />
       </Section>
       <Section title='Contacts'>
-        <Filter label='Find contacts by name'
-                value={filter}
-                isDisabled={contacts.length === 0} />
+        <SearchBox label='Find contacts by name'
+                   value={filter}
+                   isDisabled={contacts.length === 0} />
         {contacts.length > 0 ? <ContactList /> :
           <p>Please, add a contact to get started.</p>}
       </Section>

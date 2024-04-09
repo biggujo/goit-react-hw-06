@@ -1,13 +1,11 @@
-import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import ContactItem from '../ContactItem';
-import { deleteContactById } from '../../redux/contacts/contactsSlice';
-import { getContacts } from '../../redux/contacts/selectors';
-import { getFilter } from '../../redux/filter/selectors';
+import { deleteContact, selectContacts } from '../../redux/contactsSlice';
+import { selectNameFilter } from '../../redux/filtersSlice.js';
 
 export default function ContactList() {
-  const filter = useSelector(getFilter);
-  const contacts = useSelector(getContacts);
+  const filter = useSelector(selectNameFilter);
+  const contacts = useSelector(selectContacts);
   const dispatch = useDispatch();
 
   const getVisibleContacts = () => {
@@ -22,12 +20,12 @@ export default function ContactList() {
     {getVisibleContacts().map(({
       id,
       name,
-      phone,
+      number,
     }) => <li key={id}>
       <ContactItem id={id}
                    fullName={name}
-                   phone={phone}
-                   onDelete={() => dispatch(deleteContactById(id))} />
+                   number={number}
+                   onDelete={() => dispatch(deleteContact(id))} />
     </li>)}
   </ul>);
 }

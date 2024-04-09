@@ -1,16 +1,15 @@
-import React from 'react';
 import PropTypes from 'prop-types';
 import { Button } from './ContactItem.styled';
 
 export default function ContactItem({
   id,
   fullName,
-  phone,
+  number,
   onDelete,
 }) {
   return (<div>
-    <p>{fullName}: {phone} <Button type='button'
-                                   onClick={() => onDelete(id)}>Delete</Button>
+    <p>{fullName}: {number} <Button type='button'
+                                    onClick={() => onDelete(id)}>Delete</Button>
     </p>
 
   </div>);
@@ -19,6 +18,6 @@ export default function ContactItem({
 ContactItem.propTypes = {
   id: PropTypes.string.isRequired,
   fullName: PropTypes.string.isRequired,
-  phone: PropTypes.string.isRequired,
+  number: PropTypes.string.isRequired,
   onDelete: PropTypes.func.isRequired,
 };
